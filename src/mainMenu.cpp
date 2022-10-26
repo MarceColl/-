@@ -12,15 +12,17 @@ void listDirectories(const char * dirname) {
 	Serial.printf("Listing directory: %s\n", dirname);
 
 	File root = SD.open(dirname);
+
 	if (!root) {
 		Serial.println(F("Failed to open directory"));
 		return;
 	}
+
 	if (!root.isDirectory()) {
 		Serial.println(F("Not a directory"));
 		return;
-
 	}
+
 	int counter = 0;
 
 	File file = root.openNextFile();
@@ -41,9 +43,8 @@ void listDirectories(const char * dirname) {
 		file = root.openNextFile();
 	}
 }
-void listBinaries(const char * dirname, uint8_t levels) 
-{
 
+void listBinaries(const char * dirname, uint8_t levels) {
 	binaryCount = 0;
 	Serial.printf("Listing directory: %s\n", dirname);
 
@@ -61,24 +62,6 @@ void listBinaries(const char * dirname, uint8_t levels)
 
 	File file = root.openNextFile();
 	while (file) {
-
-		/*if (file.isDirectory()) {
-		  Serial.print(F("  DIR : "));
-		  Serial.println(file.name());
-		  if (levels) {
-		  listBinaries(fs, file.name(), levels - 1);
-		  }
-		  }
-		  else {
-		  String Name = file.name();
-		  if (Name.endsWith(F(F(".bin")))
-		  {
-		  Serial.print(file.name());
-		  BinaryFiles[counter-1] = file.name();
-		  }
-		  }*/
-		//char temp[100];
-		// file.getName(temp, 100);
 		String Name(file.name());
 		Serial.println(Name);
 		if (Name.endsWith(F(".BIN")) || Name.endsWith(F(".bin")))
@@ -93,49 +76,45 @@ void listBinaries(const char * dirname, uint8_t levels)
 		file = root.openNextFile();
 	}
 }
-int16_t scrollingMainMenu(uint16_t _cursor)
-{
+
+int16_t scrollingMainMenu(uint16_t _cursor) {
 	bool SDinserted = mp.SDinsertedFlag;
 	bool cursorState = 0;
 	uint16_t index = 0;
 	uint8_t cursorX = 0;
 	uint8_t cursorY = 0;
-	uint8_t elements = 6 + directoryCount; //9 default apps
+	uint8_t elements = APP_COUNT + directoryCount;
 	uint8_t x_elements = 3;
 	uint8_t y_elements = ceil((float)elements/x_elements);
 	
 	uint8_t pageNumber;
-	if(elements < 6)
+	if(elements < 6) {
 		pageNumber = 0;
-	else
+	} else {
 		pageNumber = ceil((float)(elements - 6)/3);
+	}
+
 	cursorY = int(_cursor / x_elements);
 	cursorX = _cursor % x_elements;
 	Serial.println(cursorY);
-	String passcode = "";
-	uint32_t passcodeMillis = millis();
 	uint32_t elapsedMillis = millis();
 	uint32_t elapsedMillis2 = millis();
 	bool newScreen = 1;
 	mp.display.fillScreen(TFT_BLACK);
 	Serial.println(mp.buttons.timeHeld(BTN_A));
 	// while(!mp.update());
-	while (1)
-	{
+	while (1) {
 		mp.display.fillRect(0,0,mp.display.width(), 14, TFT_BLACK);
 		mp.display.setTextSize(1);
 		mp.display.setTextColor(TFT_WHITE);
 
 		// Draw the icons
-		if(newScreen)
-		{
+		if(newScreen) {
 			mp.display.fillScreen(TFT_BLACK);
-			for (int i = 0; i < 6; i++)
-			{
+			for (int i = 0; i < APP_COUNT; i++) {
 				uint8_t tempX = i%x_elements;
 				uint8_t tempY = i/x_elements;
-				switch (pageIndex * 3 + i)
-				{
+				switch (pageIndex * 3 + i) {
 					case 0:
 						mp.display.drawIcon(bigPhone, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
@@ -157,10 +136,10 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 					default:
 						if(pageIndex * 3 + i < elements)
 						{
-							Serial.println(directories[pageIndex * 3 + i - 6]);
+							Serial.println(directories[pageIndex * 3 + i - APP_COUNT]);
 							delay(5);
-							if(SD.exists(String("/" + directories[pageIndex * 3 + i - 6] + "/icon.bmp"))) {
-								mp.display.drawBmp(String("/" + directories[pageIndex * 3 + i - 6] + "/icon.bmp"), 4 + tempX * 52, 18 + tempY * 56, 2);
+							if(SD.exists(String("/" + directories[pageIndex * 3 + i - APP_COUNT] + "/icon.bmp"))) {
+								mp.display.drawBmp(String("/" + directories[pageIndex * 3 + i - APP_COUNT] + "/icon.bmp"), 4 + tempX * 52, 18 + tempY * 56, 2);
 							} else {
 								mp.display.drawIcon(defaultIcon, 4 + tempX * 52, 18 + tempY * 56, width, bigIconHeight, 2);
 							}
@@ -172,8 +151,10 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 		}
 
 		mp.display.fillRect(0, 0, 160, 12, TFT_BLACK);
-		while(cursorY*x_elements + cursorX >= elements)
+
+		while (cursorY*x_elements + cursorX >= elements) {
 			cursorX--;
+		}
 
 		index = cursorY * x_elements + cursorX;
 		mp.display.setTextFont(2);
@@ -189,13 +170,10 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 			elapsedMillis = millis();
 			cursorState = !cursorState;
 		}
+
 		if (millis() - elapsedMillis2 >= 100) {
 			elapsedMillis2 = millis();
 		}
-		if (millis() - passcodeMillis >= 1000)
-			passcode = "";
-
-		// mp.display.drawIcon(bigMessages, 4 + cursorX*52, 18 + cursorY*56, width, bigIconHeight, 2);
 
 		mp.display.drawRect(3 + cursorX * 52, 17 + (cameraY) * 56, 50, 54, cursorState ? TFT_RED : TFT_BLACK);
 		mp.display.drawRect(2 + cursorX * 52, 16 + (cameraY) * 56, 52, 56, cursorState ? TFT_RED : TFT_BLACK);
@@ -203,21 +181,16 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 		///////////////////////////////////////
 		//////Checking for button input////////
 		///////////////////////////////////////
-		if (mp.buttons.released(BTN_A) ) //CONFIRM
-		{
-			// mp.osc->note(75, 0.05);
-			// mp.osc->play();
+		if (mp.buttons.released(BTN_A)) {
 			mp.buttons.update();
 			return cursorY * x_elements + cursorX;  //returns index of selected icon
 		}
-		if (mp.buttons.pressed(BTN_UP)) //UP
-		{
+
+		if (mp.buttons.pressed(BTN_UP)) {
 			mp.display.drawRect(3 + cursorX * 52, 17 + (cameraY) * 56, 50, 54, TFT_BLACK);
 			mp.display.drawRect(2 + cursorX * 52, 16 + (cameraY) * 56, 52, 56, TFT_BLACK);
 			mp.osc->note(75, 0.05);
 			mp.osc->play();
-			passcode += "UP";
-			passcodeMillis = millis();
 			mp.leds[0] = CRGB::Blue;
 			mp.leds[7] = CRGB::Blue;
 			FastLED.clear();
@@ -245,14 +218,12 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 			elapsedMillis = millis();
 			cursorState = 1;
 		}
-		if (mp.buttons.pressed(BTN_DOWN))//DOWN
-		{
+
+		if (mp.buttons.pressed(BTN_DOWN)) {
 			mp.display.drawRect(3 + cursorX * 52, 17 + (cameraY) * 56, 50, 54, TFT_BLACK);
 			mp.display.drawRect(2 + cursorX * 52, 16 + (cameraY) * 56, 52, 56, TFT_BLACK);
 			mp.osc->note(75, 0.05);
 			mp.osc->play();
-			passcode += "DOWN";
-			passcodeMillis = millis();
 			mp.leds[3] = CRGB::Blue;
 			mp.leds[4] = CRGB::Blue;
 			FastLED.clear();
@@ -276,14 +247,12 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 			elapsedMillis = millis();
 			cursorState = 1;
 		}
-		if (mp.buttons.pressed(BTN_LEFT)) //LEFT
-		{
+
+		if (mp.buttons.pressed(BTN_LEFT)) {
 			mp.display.drawRect(3 + cursorX * 52, 17 + (cameraY) * 56, 50, 54, TFT_BLACK);
 			mp.display.drawRect(2 + cursorX * 52, 16 + (cameraY) * 56, 52, 56, TFT_BLACK);
 			mp.osc->note(75, 0.05);
 			mp.osc->play();
-			passcode += "LEFT";
-			passcodeMillis = millis();
 			mp.leds[6] = CRGB::Blue;
 			mp.leds[5] = CRGB::Blue;
 			FastLED.clear();
@@ -291,20 +260,19 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 
 			if (cursorX == 0) {
 				cursorX = x_elements - 1;
-			}
-			else
+			} else {
 				cursorX--;
+			}
+
 			elapsedMillis = millis();
 			cursorState = 1;
 		}
-		if (mp.buttons.pressed(BTN_RIGHT))//RIGHT
-		{
+
+		if (mp.buttons.pressed(BTN_RIGHT)) {
 			mp.display.drawRect(3 + cursorX * 52, 17 + (cameraY) * 56, 50, 54, TFT_BLACK);
 			mp.display.drawRect(2 + cursorX * 52, 16 + (cameraY) * 56, 52, 56, TFT_BLACK);
 			mp.osc->note(75, 0.05);
 			mp.osc->play();
-			passcode += "RIGHT";
-			passcodeMillis = millis();
 			mp.leds[1] = CRGB::Blue;
 			mp.leds[2] = CRGB::Blue;
 			FastLED.clear();
@@ -318,9 +286,8 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 			elapsedMillis = millis();
 			cursorState = 1;
 		}
-		if (mp.buttons.released(BTN_B))//B BUTTON
-		{
 
+		if (mp.buttons.released(BTN_B)) {
 			mp.leds[0] = CRGB::Red;
 			mp.leds[7] = CRGB::Red;
 			FastLED.show();
@@ -330,10 +297,8 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 			cameraY = 0;
 			return -2;
 		}
-		// if (passcode == "UPUPDOWNDOWNLEFTRIGHTLEFTRIGHT")
-		// 	return -3;
-		if(SDinserted != mp.SDinsertedFlag)
-		{
+
+		if(SDinserted != mp.SDinsertedFlag) {
 			SDinserted = mp.SDinsertedFlag;
 			pageIndex = 0;
 			cameraY = 0;
@@ -341,12 +306,11 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 		}
 		if(mp.exitedLockscreen) {
 			mp.display.fillScreen(TFT_BLACK);
-			for (int i = 0; i < 6;i++)
+			for (int i = 0; i < APP_COUNT; i++)
 			{
 				uint8_t tempX = i%x_elements;
 				uint8_t tempY = i/x_elements;
-				switch (pageIndex * 3 + i)
-				{
+				switch (pageIndex * 3 + i) {
 					case 0:
 						mp.display.drawIcon(bigPhone, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
@@ -367,10 +331,10 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 						break;
 					default:
 						if(pageIndex * 3 + i < elements) {
-							Serial.println(directories[pageIndex * 3 + i - 6]);
+							Serial.println(directories[pageIndex * 3 + i - APP_COUNT]);
 							delay(5);
-							if(SD.exists(String("/" + directories[pageIndex * 3 + i - 6] + "/icon.bmp"))) {
-								mp.display.drawBmp(String("/" + directories[pageIndex * 3 + i - 6] + "/icon.bmp"), 4 + tempX * 52, 18 + tempY * 56, 2);
+							if(SD.exists(String("/" + directories[pageIndex * 3 + i - APP_COUNT] + "/icon.bmp"))) {
+								mp.display.drawBmp(String("/" + directories[pageIndex * 3 + i - APP_COUNT] + "/icon.bmp"), 4 + tempX * 52, 18 + tempY * 56, 2);
 							} else {
 								mp.display.drawIcon(defaultIcon, 4 + tempX * 52, 18 + tempY * 56, width, bigIconHeight, 2);
 							}
@@ -382,8 +346,8 @@ int16_t scrollingMainMenu(uint16_t _cursor)
 		mp.update();
 	}
 }
-void mainMenu()
-{
+
+void mainMenu() {
 	while(1)
 	{
 		int16_t index = 0;
@@ -402,21 +366,8 @@ void mainMenu()
 			}
 			else if(index == -1) {
 				break;
-			} else if(index < 6) {
-				if (titles[index] == "Apps") {
-					mp.display.fillScreen(TFT_BLACK);
-					mp.display.setCursor(0, mp.display.height()/2 - 20);
-					mp.display.setTextFont(2);
-					mp.display.printCenter(F("PLACEHOLDER"));
-					mp.display.setCursor(0, mp.display.height()/2);
-					mp.display.printCenter(F("PLACEHOLDER"));
-					uint32_t tempMillis = millis();
-					while(millis() < tempMillis + 2000 && !mp.buttons.released(BTN_A) && !mp.buttons.released(BTN_B))
-						mp.update();
-					while(!mp.update());
-				}
-
-				if (titles[index] == "Messages") {
+			} else if(index < APP_COUNT) {
+				if (index == APP_MESSAGES) {
 					if(mp.SDinsertedFlag) {
 						while(!mp.update());
 						messagesApp();
@@ -429,25 +380,23 @@ void mainMenu()
 						mp.display.setCursor(0, mp.display.height()/2);
 						mp.display.printCenter(F("SD card missing"));
 						uint32_t tempMillis = millis();
-						while(millis() < tempMillis + 2000 && !mp.buttons.released(BTN_A) && !mp.buttons.released(BTN_B))
+
+						while(millis() < tempMillis + 2000 && !mp.buttons.released(BTN_A) && !mp.buttons.released(BTN_B)) {
 							mp.update();
+						}
+
 						while(!mp.update());
 					}
-				}
-
-				if (titles[index] == "Phone") {
+				} else if (index == APP_PHONE) {
 					mp.display.fillScreen(TFT_BLACK);
 					mp.display.setTextColor(TFT_WHITE);
 					phoneApp();
-					
-				}
-
-				if (titles[index] == "Contacts") {
+				} else if (index == APP_CONTACTS) {
 					mp.display.fillScreen(TFT_BLACK);
 					mp.display.setTextColor(TFT_WHITE);
 					if(mp.SDinsertedFlag) {
 						mp.display.fillScreen(TFT_BLACK);
-						mp.display.setCursor(0,mp.display.height()/2 -16);
+						mp.display.setCursor(0,mp.display.height()/2 - 16);
 						mp.display.printCenter(F("Loading contacts..."));
 						contactsApp(false);
 					} else if(!mp.SDinsertedFlag) {
@@ -457,25 +406,22 @@ void mainMenu()
 						mp.display.setCursor(0, mp.display.height()/2);
 						mp.display.printCenter(F("Insert SD and reset"));
 						uint32_t tempMillis = millis();
-						while(millis() < tempMillis + 2000 && !mp.buttons.released(BTN_A) && !mp.buttons.released(BTN_B))
+
+						while(millis() < tempMillis + 2000 && !mp.buttons.released(BTN_A) && !mp.buttons.released(BTN_B)) {
 							mp.update();
+						}
+
 						while(!mp.update());
 					}
-				}
-
-				if (titles[index] == "Settings") {
+				} else if (index == APP_SETTINGS) {
 					if(settingsApp()) {
 						pageIndex = 0;
 						cameraY = 0;
 						return;
 					}
-				}
-
-				if(titles[index] == "Clock") {
+				} else if(index == APP_CLOCK) {
 					clockApp();
-				}
-
-				if(titles[index] == "Flashlight") {
+				} else if(index == APP_FLASHLIGHT) {
 					flashlightApp();
 				}
 			} else {
@@ -490,7 +436,6 @@ void mainMenu()
 			}
 
 			mp.update();
-
 		}
 	}
 }
