@@ -1,0 +1,8 @@
+.pio
+.pioenvs
+.piolibdeps
+.vscode
+include
+.travis.yml
+test
+.history
