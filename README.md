@@ -1,6 +1,15 @@
 
 
+
 # CircuitMess Ringo firmware 
+
+Fonts
+
+``` sh
+./fontconvert Noto\ Sans\ Mono\ CJK\ JP\ Regular/Noto\ Sans\ Mono\ CJK\ JP\ Regular.otf 12 12353 12435 > hiragana12.h
+```
+
+`
 
 A repository for the core firmware that comes pre-loaded on every CircuitMess Ringo.
 

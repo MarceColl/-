@@ -59,3 +59,6 @@
 #define FF46 FreeSerifItalic12pt7b
 #define FF47 FreeSerifItalic18pt7b
 #define FF48 FreeSerifItalic24pt7b
+
+#define JP1 hiragana9
+#define JP2 hiragana12

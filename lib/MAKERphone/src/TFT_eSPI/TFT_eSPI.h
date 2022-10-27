@@ -255,6 +255,9 @@
   // Call up any user custom fonts
   //#include "User_Setups/User_Custom_Fonts.h""
 
+  #include "Fonts/GFXFF/hiragana9.h"  // JP1
+  #include "Fonts/GFXFF/hiragana12.h"  // JP2
+
   // Original Adafruit_GFX "Free Fonts"
   #include "Fonts/GFXFF/TomThumb.h"  // TT1
 

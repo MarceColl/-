@@ -4117,36 +4117,9 @@ void MAKERphone::lockscreen()
 			display.print("loading...");
 		else if (carrierName == "" && !simInserted && sim_module_version == 255)
 			display.print("No module");
-		if (!digitalRead(CHRG_INT))
+		if (!digitalRead(CHRG_INT)) {
 			display.drawBitmap(148, 2, batteryChargingIcon, TFT_BLACK, 2);
-		else
-		{
-			//y = -316139 + 250.3763*x - 0.06612874*x^2 + 0.000005825959*x^3
-			//y - percentage(%), x - voltage(V)
-			/*
-			double percentage = -316139 + (250.3763 * batteryVoltage) - (0.06612874 * batteryVoltage * batteryVoltage) + (0.000005825959 * batteryVoltage * batteryVoltage * batteryVoltage);
-
-			if (percentage > 100)
-			{
-				// Serial.print("Voltage: ");
-
-				percentage = 100;
-			}
-			if (percentage < 0)
-				percentage = 0;
-			display.setTextFont(2);
-			display.setTextSize(1);
-			display.setTextColor(TFT_BLACK);
-			display.setCursor(120, 2);
-			percentage = round(percentage / 10);
-			if (percentage == 10)
-				display.setCursor(110, 2);
-
-			display.printf("%d", (int)percentage * 10);
-			display.print("%");
-			*/
-			// if (batteryVoltage > 4100)
-			// 	display.drawBitmap(148, 2, batteryChargingIcon, TFT_BLACK, 2);
+		} else {
 			if (batteryVoltage >= 3850)
 				display.drawBitmap(148, 2, batteryFullIcon, TFT_BLACK, 2);
 			else if (batteryVoltage < 3850 && batteryVoltage >= 3750)
@@ -4159,22 +4132,24 @@ void MAKERphone::lockscreen()
 				display.drawBitmap(148, 2, batteryEmptyIcon, TFT_BLACK, 2);
 		}
 		uint8_t temp = sizeof(notificationTypeList);
-		for (int i = 0; i < sizeof(notificationTypeList); i++)
-		{
-			if (notificationTypeList[i] == 0)
-			{
+		for (int i = 0; i < sizeof(notificationTypeList); i++) {
+			if (notificationTypeList[i] == 0) {
 				temp = i;
 				break;
 			}
 		}
-		if (temp > 0)
+
+		if (temp > 0) {
 			drawNotificationWindow(64, temp - 1);
-		if (temp > 1)
+		}
+
+		if (temp > 1) {
 			drawNotificationWindow(88, temp - 2);
+		}
+
 		display.setFreeFont(TT1);
 		display.setTextSize(4);
-		if (millis() - elapsedMillis >= 500)
-		{
+		if (millis() - elapsedMillis >= 500) {
 			elapsedMillis = millis();
 			blinkState = !blinkState;
 			if (clockYear % 100 != 4 && clockYear % 100 != 80)
@@ -4182,10 +4157,10 @@ void MAKERphone::lockscreen()
 		}
 
 		display.setCursor(10, 80);
-		display.setTextFont(2);
-		display.setTextSize(2);
+		display.setFreeFont(JP1);
+		display.setTextSize(1);
 		display.setTextColor(TFT_BLACK);
-		display.print("MarceOS");
+		display.print("BDFHJ");
 
 		if (blinkState == 1)
 		{
