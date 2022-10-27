@@ -1183,16 +1183,23 @@ bool MAKERphone::update()
 }
 void MAKERphone::splashScreen()
 {
-	for (int y = -35; y < -10; y++)
-	{
-		display.drawBitmap(0, y - 1, splashScreenLogo, TFT_BLACK);
-		display.drawBitmap(0, y, splashScreenLogo, TFT_WHITE);
-		while (!update())
-			;
+	char t[] = { 'A' + 0x16, 'A' + 0x46, 'A' + 0x05, 'A' + 0x17, 'A' + 0x52, 0 };
+	for (int y = -35; y < -10; y++) {
+		display.setTextColor(TFT_BLACK);
+		display.setFreeFont(JP1);
+		display.setTextSize(1);
+		display.setCursor(0, 50 + y - 1);
+		display.printCenter(t);
+
+		display.setTextColor(TFT_WHITE);
+		display.setCursor(0, 50 + y);
+		display.printCenter(t);
+		while (!update());
 	}
 	delay(100);
 	display.setTextColor(TFT_WHITE);
 	display.setTextFont(2);
+	display.setTextSize(1);
 	display.setCursor(0, 100);
 	display.printCenter("Loading...");
 	while (!update())
@@ -4160,7 +4167,8 @@ void MAKERphone::lockscreen()
 		display.setFreeFont(JP1);
 		display.setTextSize(1);
 		display.setTextColor(TFT_BLACK);
-		display.print("BDFHJ");
+		char t[] = { 'A' + 0x16, 'A' + 0x46, 'A' + 0x05, 'A' + 0x17, 'A' + 0x52, 0 };
+		display.print(t);
 
 		if (blinkState == 1)
 		{

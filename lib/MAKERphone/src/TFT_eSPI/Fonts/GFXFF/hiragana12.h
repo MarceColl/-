@@ -1,4 +1,4 @@
-const uint8_t Noto_Sans_Mono_CJK_JP_Regular12pt8bBitmaps[] PROGMEM = {
+const uint8_t jp_font12pt8bBitmaps[] PROGMEM = {
   0x02, 0x00, 0x02, 0x00, 0x7F, 0xFC, 0x7F, 0xF0, 0x06, 0x00, 0x06, 0x10,
   0x07, 0xF8, 0x0F, 0xBC, 0x1E, 0x26, 0x36, 0x63, 0x66, 0x43, 0x66, 0xC3,
   0xC7, 0x83, 0xC7, 0x03, 0xC6, 0x06, 0x7F, 0x1C, 0x20, 0x78, 0x00, 0x40,
@@ -323,7 +323,7 @@ const uint8_t Noto_Sans_Mono_CJK_JP_Regular12pt8bBitmaps[] PROGMEM = {
   0x23, 0x83, 0x03, 0x30, 0x30, 0x36, 0x03, 0x06, 0x60, 0x30, 0x66, 0x03,
   0x0C, 0xC0, 0x1F, 0x8C, 0x00, 0xF0 };
 
-const GFXglyph Noto_Sans_Mono_CJK_JP_Regular12pt8bGlyphs[] PROGMEM = {
+const GFXglyph jp_font12pt8bGlyphs[] PROGMEM = {
   {     0,  16,  18,  24,    4,  -15 },   // 0x3041
   {    36,  18,  20,  24,    3,  -18 },   // 0x3042
   {    81,  16,  15,  24,    4,  -13 },   // 0x3043
@@ -408,9 +408,9 @@ const GFXglyph Noto_Sans_Mono_CJK_JP_Regular12pt8bGlyphs[] PROGMEM = {
   {  3770,  19,  21,  24,    2,  -18 },   // 0x3092
   {  3820,  20,  20,  24,    2,  -18 } }; // 0x3093
 
-const GFXfont Noto_Sans_Mono_CJK_JP_Regular12pt8b PROGMEM = {
-  (uint8_t  *)Noto_Sans_Mono_CJK_JP_Regular12pt8bBitmaps,
-  (GFXglyph *)Noto_Sans_Mono_CJK_JP_Regular12pt8bGlyphs,
+const GFXfont jp_font12pt8b PROGMEM = {
+  (uint8_t  *)jp_font12pt8bBitmaps,
+  (GFXglyph *)jp_font12pt8bGlyphs,
   0x3041, 0x3093, 35 };
 
 // Approx. 4458 bytes

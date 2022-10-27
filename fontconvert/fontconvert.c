@@ -25,7 +25,7 @@ See notes at end for glyph nomenclature & other tidbits.
 #include FT_GLYPH_H
 #include FT_MODULE_H
 #include FT_TRUETYPE_DRIVER_H
-#include "../gfxfont.h" // Adafruit_GFX font structures
+#include "gfxfont.h" // Adafruit_GFX font structures
 
 #define DPI 141 // Approximate res. of Adafruit 2.8" TFT
 
@@ -51,7 +51,7 @@ void enbit(uint8_t value) {
 }
 
 int* expand_range(char *arg, int *num_items, int *max, int *min) {
-	int *values = (int*)malloc(sizeof(int)*10000);	
+	int *values = (int*)malloc(sizeof(int)*50000);
 	*num_items = 0;
 	int arg_len = strlen(arg);
 
@@ -133,6 +133,9 @@ int* expand_range(char *arg, int *num_items, int *max, int *min) {
 
 		first = -1;
 	}
+
+  /* *max = (16000 + *num_items); */
+  /* *min = 16000; */
 
 	return values;
 }
@@ -296,7 +299,7 @@ int main(int argc, char *argv[]) {
     printf("  { %5d, %3d, %3d, %3d, %4d, %4d }", table[j].bitmapOffset,
            table[j].width, table[j].height, table[j].xAdvance, table[j].xOffset,
            table[j].yOffset);
-    if (i < last) {
+    if (j < num_items - 1) {
       printf(",   // 0x%02X", i);
       if ((i >= ' ') && (i <= '~')) {
         printf(" '%c'", i);

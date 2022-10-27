@@ -58,8 +58,8 @@
 //
 
 #define TT1 &TomThumb
-#define JP1 &Noto_Sans_Mono_CJK_JP_Regular9pt8b
-#define JP2 &Noto_Sans_Mono_CJK_JP_Regular12pt8b
+#define JP1 &jp_font9pt8b
+#define JP2 &jp_font12pt8b
 
 //#define FM9 &FreeMono9pt7b
 //#define FM12 &FreeMono12pt7b
