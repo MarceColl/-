@@ -1,4 +1,5 @@
 #include "mainMenu.h"
+#include "kaimen.h"
 
 uint8_t pageIndex = 0;
 uint8_t cameraY = 0;
@@ -27,7 +28,6 @@ void listDirectories(const char * dirname) {
 
 	File file = root.openNextFile();
 	while (file) {
-
 		if (file.isDirectory()) {
 			String Name(file.name());
 			Serial.println(Name);
@@ -115,23 +115,26 @@ int16_t scrollingMainMenu(uint16_t _cursor) {
 				uint8_t tempX = i%x_elements;
 				uint8_t tempY = i/x_elements;
 				switch (pageIndex * 3 + i) {
-					case 0:
+					case APP_PHONE:
 						mp.display.drawIcon(bigPhone, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
-					case 1:
+					case APP_CONTACTS:
 						mp.display.drawIcon(bigContacts, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
-					case 2:
+					case APP_MESSAGES:
 						mp.display.drawIcon(bigMessages, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
-					case 3:
+					case APP_SETTINGS:
 						mp.display.drawIcon(bigSettings, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
-					case 4:
+					case APP_CLOCK:
 						mp.display.drawIcon(clock_icon, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
-					case 5:
+					case APP_FLASHLIGHT:
 						mp.display.drawIcon(flash_icon, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
+						break;
+					case APP_FAKESETTINGS:
+						mp.display.drawIcon(bigSettings, 4 + tempX*52, 18 + tempY*56, width, bigIconHeight, 2);
 						break;
 					default:
 						if(pageIndex * 3 + i < elements)
@@ -419,6 +422,8 @@ void mainMenu() {
 						cameraY = 0;
 						return;
 					}
+				} else if (index == APP_FAKESETTINGS) {
+					K::open(settings_app);
 				} else if(index == APP_CLOCK) {
 					clockApp();
 				} else if(index == APP_FLASHLIGHT) {

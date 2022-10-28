@@ -8,6 +8,7 @@
 #include "phoneApp.h"
 #include "clockApp.h"
 #include "flashlightApp.h"
+#include "kSettingsApp.h"
 
 extern uint16_t directoryCount;
 extern String directories[100];

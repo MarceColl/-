@@ -10,6 +10,7 @@ typedef enum {
 	APP_SETTINGS,
 	APP_CLOCK,
 	APP_FLASHLIGHT,
+    APP_FAKESETTINGS,
     // Keep at the end
     APP_COUNT,
 } Apps;
@@ -17,7 +18,7 @@ typedef enum {
 extern MAKERphone mp;
 extern int backgroundColors[7];
 extern String backgroundColorsNames[7];
-extern String titles[6];
+extern String titles[APP_COUNT];
 // extern Oscillator *osc;
 extern int textPointer;
 extern StaticJsonBuffer<capacity> jb;

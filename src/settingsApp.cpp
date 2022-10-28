@@ -86,14 +86,15 @@ int8_t settingsMenu(String* title, uint8_t length, uint8_t _cursor) {
 		if (cameraY_actual - cameraY == 1) {
 			cameraY_actual = cameraY;
 		}
-		if(millis() - blinkMillis > 350)
-		{
+		if(millis() - blinkMillis > 350) {
 			blinkMillis = millis();
 			blinkState = !blinkState;
 		}
+
 		for (uint8_t i = 0; i < length; i++) {
 			settingsMenuDrawBox(title[i], i, cameraY_actual);
 		}
+
 		if(blinkState)
 			settingsMenuDrawCursor(cursor, cameraY_actual, pressed);
 
@@ -107,11 +108,11 @@ int8_t settingsMenu(String* title, uint8_t length, uint8_t _cursor) {
 			while(!mp.update());// Exit when pressed
 			break;
 		}
+
 		if(mp.buttons.released(BTN_HOME)) {
 			mp.exitedLockscreen = true;
 			mp.lockscreen();
 		}
-
 
 		if (mp.buttons.pressed(BTN_UP)) {  //BUTTON UP
 			blinkState = 1;
@@ -244,8 +245,7 @@ void networkMenu() {
 	uint32_t blinkMillis = millis();
 	uint16_t color = 0;
 	mp.dataRefreshFlag = 1;
-	while (1)
-	{
+	while (1) {
 		// Serial.println(mp.airplaneMode);
 		mp.display.setTextColor(TFT_BLACK);
 		mp.display.fillScreen(0xFB6D);

@@ -22,13 +22,14 @@ String backgroundColorsNames[7] PROGMEM = {
 	"Pink"
 };
 
-String titles[6] PROGMEM = {
+String titles[APP_COUNT] PROGMEM = {
 	"Phone",
 	"Contacts",
 	"Messages",
 	"Settings",
 	"Clock",
 	"Flashlight",
+	"Fake Settings",
 };
 
 StaticJsonBuffer<capacity> jb;
@@ -39,22 +40,23 @@ void menuDrawBox(String text, uint8_t i, int32_t y) {
 	uint8_t scale;
 	uint8_t offset;
 	uint8_t boxHeight;
-	if(mp.resolutionMode)
-	{
+
+	if(mp.resolutionMode) {
 		scale = 1;
 		offset = menuYOffset;
 		boxHeight = 7;
-	}
-	else
-	{
+	} else {
 		scale = 2;
 		offset = 17;
 		boxHeight = 15;
 	}
+
 	y += i * (boxHeight + 1) + offset;
+
 	if (y < 0 || y > mp.display.height()) {
 		return;
 	}
+
 	mp.display.fillRect(1, y + 1, mp.display.width() - 2, boxHeight - (scale-1), TFT_DARKGREY);
 	mp.display.setTextColor(TFT_WHITE);
 	mp.display.setCursor(2, y + 2);
@@ -372,8 +374,7 @@ void callNumber(String number)
 	uint8_t callState = 1;
 	uint8_t callIdNumber = 0;
 	
-	while (1)
-	{
+	while (1) {
 		mp.display.fillScreen(TFT_WHITE);
 		if (Serial1.available())
 		{
