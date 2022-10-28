@@ -144,7 +144,7 @@ namespace K {
         } else if (curr_layout == Layout::TWO_COLUMNS) {
             draw_idx.x = curr_col;
 
-            if (curr_col == 1) {
+            if (curr_col == 0) {
                 draw_idx.y += 1;
             }
         }
