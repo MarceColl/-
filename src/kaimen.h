@@ -88,6 +88,7 @@ namespace K {
      * Start a screen, this clears the background and handles input.
      */
     void screen();
+    void set_spacing(uint8_t s);
 
     void text(char *str);
 

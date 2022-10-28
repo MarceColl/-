@@ -1,4 +1,5 @@
 #include "kaimen.h"
+#include "debug.h"
 
 namespace K {
     uint16_t y_offset;
@@ -10,6 +11,7 @@ namespace K {
     bool confirmed;
     bool blink;
     bool some_fit;
+    uint8_t spacing = BLOCK_HEIGHT;
     uint8_t max_curr;
 
     int open(int (*next)()) {
@@ -21,6 +23,8 @@ namespace K {
             // TODO(Marce): Error screen
             goto exit;
         }
+
+        dbg("open - %d", curr_ctx);
 
         // Initialize the cursor to the first item
         ctx_stack[curr_ctx].idx.x = 0;
@@ -60,10 +64,12 @@ namespace K {
 
             if (mp.buttons.pressed(BTN_DOWN)) {
                 ctx_stack[curr_ctx].idx.y += 1;
+                dbg("DOWN");
             }
 
             if (mp.buttons.pressed(BTN_RIGHT)) {
                 ctx_stack[curr_ctx].idx.x += 1;
+                dbg("UP");
             }
 
             if (mp.buttons.pressed(BTN_LEFT)) {
@@ -74,6 +80,12 @@ namespace K {
                 mp.exitedLockscreen = true;
                 mp.lockscreen();
             }
+
+            #ifdef DEBUG
+            if (mp.buttons.released(BTN_FUN_LEFT)) {
+                K::open(dbg_screen);
+            }
+            #endif
 
             clear_screen();
 
@@ -118,7 +130,7 @@ namespace K {
             curr_col = 0;
             r->x = 0;
             r->w = SCREEN_WIDTH;
-            y_offset += BLOCK_HEIGHT;
+            y_offset += spacing;
         } else if (curr_layout == Layout::TWO_COLUMNS) {
             if (curr_col == 0) {
                 r->x = 0;
@@ -130,7 +142,7 @@ namespace K {
             curr_col = (curr_col + 1) % 2;
 
             if (curr_col == 0) {
-                y_offset += BLOCK_HEIGHT;
+                y_offset += spacing;
             }
         }
 
@@ -157,6 +169,8 @@ namespace K {
     bool button(char *text, Color bgc, int fgc) {
         bool res = false;
 
+        dbg("button %d %d", bgc, fgc);
+
         region r;
         get_layout_space(&r, NULL);
 
@@ -164,7 +178,7 @@ namespace K {
         mp.display.setTextColor(fgc);
         mp.display.setTextSize(1);
         mp.display.setTextFont(2);
-        mp.display.drawString(text, r.x, r.y + 2);
+        mp.display.drawString(text, r.x + 2, r.y + 2);
 
         if (ctx_stack[curr_ctx].idx.y == draw_idx.y &&
             (curr_layout == Layout::ONE_COLUMN ||
@@ -183,13 +197,17 @@ namespace K {
         return res;
     }
 
+    void set_spacing(uint8_t s) {
+        spacing = s;
+    }
+
     void text(char *text) {
         region r;
         get_layout_space(&r, NULL);
 
         mp.display.setTextColor(TFT_WHITE);
         mp.display.setTextSize(1);
-        mp.display.setTextFont(2);
-        mp.display.drawString(text, 30, r.y + 2);
+        mp.display.setTextFont(0);
+        mp.display.drawString(text, r.x + 2, r.y + 2);
     }
 }

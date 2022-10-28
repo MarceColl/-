@@ -16,14 +16,13 @@ int network_menu() {
     K::set_layout(K::Layout::ONE_COLUMN);
 
     K::text("Holi");
-    if (K::button("WASSUP", K::Color::RED, TFT_BLACK)) {
-    }
+    if (K::button("WASSUP", K::Color::RED, TFT_BLACK)) {}
 
     K::set_layout(K::Layout::TWO_COLUMNS);
 
     K::text("Holi3");
-    if (K::button("Gen", K::Color::PURPLE, TFT_BLACK)) {
-    }
+    if (K::button("Gen", K::Color::PURPLE, TFT_BLACK)) {}
+
     return 0;
 }
 
@@ -32,7 +31,5 @@ int settings_app() {
         K::open(network_menu);
     }
 
-    if (K::button("Display", K::Color::GREEN, TFT_BLACK)) {
-        // K::open(display_menu);
-    }
+    if (K::button("Display", K::Color::GREEN, TFT_BLACK)) {}
 }
